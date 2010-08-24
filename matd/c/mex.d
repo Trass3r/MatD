@@ -261,31 +261,31 @@ mxArray* mexGetVariable(
 );
 
 
-/*
+/**
  * Lock a MEX-function so that it cannot be cleared from memory.
  */
 void mexLock();
 
 
-/*
+/**
  * Unlock a locked MEX-function so that it can be cleared from memory.
  */
 void mexUnlock();
 
 
-/*
+/**
  * Return true if the MEX-function is currently locked, false otherwise.
  */
 bool mexIsLocked();
 
 
-/*
- * Return the name of a the MEXfunction currently executing.
+/**
+ * Return the name of the MEXfunction currently executing.
  */
 const(char)* mexFunctionName();
 
 
-/*
+/**
  * Parse and execute MATLAB syntax in string.  Returns zero if successful,
  * and a non zero value if an error occurs.
  */
@@ -294,7 +294,7 @@ int mexEvalString(
 );
 
 
-/*
+/**
  * Parse and execute MATLAB syntax in string.  Returns NULL if successful,
  * and an MException if an error occurs.
  */
@@ -303,15 +303,11 @@ mxArray* mexEvalStringWithTrap(
 );
 
 
-/*
+/**
  * Register Mex-file's At-Exit function (accessed via MEX callback)
  */
 int  mexAtExit(mex_exit_fn exit_fcn);
 
-
-/* Copyright 1996-2006 The MathWorks, Inc. */
-
-/* $Revision: 1.9.4.3 $ */
 
 /*
  * Revisit.  Conflicts with 32-bit compatibility API.  XXX

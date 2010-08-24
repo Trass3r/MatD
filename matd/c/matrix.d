@@ -155,7 +155,7 @@ alias char16_t mxChar;
  */
 version(D_LP64) // #if defined(_LP64) || defined(_WIN64)
 {
-static assert(0, "need to fix mxClassID for 64Bit usage!");
+//static assert(0, "need to fix mxClassID for 64Bit usage!");
 const __tmpe = 15;
 }
 else
@@ -198,17 +198,14 @@ enum mxComplexity : int
 
 version(ARRAY_ACCESS_INLINING)
 {
-//import std.stddef;
+import std.bitmanip;
 
-/*
+/**
  * This modified version of the mxArray structure is needed to support
  * the ARRAY_ACCESS_INLINING macros.  NOTE: The elements in this structure
  * should not be accessed directly.  Inlined MEX-files are NOT guaranteed
  * to be portable from one release of MATLAB to another.
  */
-
-import std.bitmanip;
-
 struct mxArray
 {
 	void*	reserved;
