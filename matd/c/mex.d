@@ -307,35 +307,3 @@ mxArray* mexEvalStringWithTrap(
  * Register Mex-file's At-Exit function (accessed via MEX callback)
  */
 int  mexAtExit(mex_exit_fn exit_fcn);
-
-
-/*
- * Revisit.  Conflicts with 32-bit compatibility API.  XXX
- */
-/+
-#if 0
-
-version(ARGCHECK)
-{
-#include "mwdebug.h" /* Prototype _d versions of API functions */
-
-#define mexAtExit(exitfcn) 				mexAtExit_d(exitfcn, __FILE__, __LINE__)
-#define mexCallMATLAB(nlhs, plhs, nrhs, prhs, fcn) mexCallMATLAB_d(nlhs, plhs, nrhs, prhs, fcn, __FILE__, __LINE__)
-#define mexErrMsgTxt(errmsg)			mexErrMsgTxt_d(errmsg, __FILE__, __LINE__)
-#define mexEvalString(str) 				mexEvalString_d(str, __FILE__, __LINE__)
-#define mexGet(handle, property) 		mexGet_d(handle, property, __FILE__, __LINE__)
-#define mexGetVariable(workspace, name) 	mexGetVariable_d(workspace, name, __FILE__, __LINE__)
-#define mexGetVariablePtr(workspace, name)      mexGetVariablePtr_d(workspace, name, __FILE__, __LINE__)
-#define mexIsGlobal(pa)                 mexIsGlobal_d(pa, __FILE__, __LINE__)
-#define mexMakeArrayPersistent(pa) 		mexMakeArrayPersistent_d(pa, __FILE__, __LINE__)              
-#define mexMakeMemoryPersistent(ptr) 	mexMakeMemoryPersistent_d(ptr, __FILE__, __LINE__)
-#define mexPutVariable(workspace, name, pa) 	mexPutVariable_d(workspace, name, pa, __FILE__, __LINE__)
-#define mexSet(handle, property, value) mexSet_d(handle, property, value, __FILE__, __LINE__)
-#define mexSetTrapFlag(value)           mexSetTrapFlag_d(value, __FILE__, __LINE__)
-#define mexSubsAssign(plhs, sub, nsubs, rhs)    mexSubsAssign_d(plhs, sub, nsubs, rhs, __FILE__, __LINE__)
-#define mexSubsReference(prhs, sub, nsubs)    mexSubsReference_d(prhs, sub, nsubs, __FILE__, __LINE__)
-#define mexWarnMsgTxt(str)		 		mexWarnMsgTxt_d(str, __FILE__, __LINE__)
-}
-
-#endif
-+/

@@ -142,8 +142,8 @@ typedef bool mxLogical;
 /**
  * UTF-16 character type
  */
-alias ushort CHAR16_T;
-alias ushort char16_t;
+alias wchar CHAR16_T;
+alias wchar char16_t;
 
 /**
  * Typedef required for Unicode support in MATLAB
@@ -196,71 +196,16 @@ enum mxComplexity : int
 	mxCOMPLEX,
 }
 
-version(ARRAY_ACCESS_INLINING)
-{
-import std.bitmanip;
-
 /**
- * This modified version of the mxArray structure is needed to support
- * the ARRAY_ACCESS_INLINING macros.  NOTE: The elements in this structure
- * should not be accessed directly.  Inlined MEX-files are NOT guaranteed
- * to be portable from one release of MATLAB to another.
+ * Published incomplete definition of mxArray
  */
-struct mxArray
-{
-	void*	reserved;
-	int[2]	reserved1;
-	void*	reserved2;
-	size_t	number_of_dims;
-	uint	reserved3;
-	struct A
-	{
-		mixin(bitfields!(
-			
-	 		bool,	"flag0",	1,
-	 		bool,	"flag1",	1, 
-	 		bool,	"flag2",	1,
-	 		bool,	"flag3",	1,
-	 		bool,	"flag4",	1,
-	 		bool,	"flag5",	1,
-	 		bool,	"flag6",	1,
-	 		bool,	"flag7",	1,
-	 		bool,	"flag7a",	1,
-	 		bool,	"flag8",	1,
-	 		bool,	"flag9",	1,
-	 		bool,	"flag10",	1,
-	 		ubyte,	"flag11",	4,
-	 		ubyte,	"flag12",	8,
-	 		ubyte,	"flag13",	8));
-	}
-	A	flags;
-	size_t[2]	reserved4;
-	union data
-	{
-		struct B
-		{
-			void*		pdata;
-			void*		pimag_data;
-			void*		reserved5;
-			size_t[3]	reserved6;
-		}
-		B number_array;
-	}
-}
+typedef void mxArray; // alias struct mxArray_tag mxArray;
 
-} // of version(ARRAY_ACCESS_INLINING)
-else
-{
-	/**
-	 * Published incomplete definition of mxArray
-	 */
-	typedef void mxArray; // alias struct mxArray_tag mxArray;
-}
 
 /**
  * allocate memory, notifying registered listener
  */
-void *mxMalloc(
+void* mxMalloc(
 	size_t	n		// number of bytes
 	);
 
@@ -268,7 +213,7 @@ void *mxMalloc(
 /**
  * allocate cleared memory, notifying registered listener.
  */
-void *mxCalloc(
+void* mxCalloc(
 	size_t	n,		// number of objects
 	size_t	size	// size of objects
 	);
@@ -292,25 +237,13 @@ void* mxRealloc(void *ptr, size_t size);
 mxClassID mxGetClassID(const(mxArray)* pa);
 
 
-version(ARRAY_ACCESS_INLINING)
-{
-	/**
-	 * Get pointer to data
-	 */
-	void* mxGetData(const(mxArray)* pa)
-	{
-		return pa.data.number_array.pdata;
-	}
-}
-else
-{
-	/**
-	 * Get pointer to data
-	 */
-	void* mxGetData(
-			const(mxArray)* pa		// pointer to array
-	);
-}
+/**
+ * Get pointer to data
+ */
+void* mxGetData(
+		const(mxArray)* pa		// pointer to array
+);
+
 
 /**
  * Set pointer to data
@@ -369,31 +302,18 @@ bool mxIsFunctionHandle(const(mxArray)* pa);
  * DO NOT USE if possible.
  * Is array user defined MATLAB v5 object
  */
-bool mxIsObject(
+deprecated bool mxIsObject(
 	const(mxArray)* pa		// pointer to array
 );
 
 
-version(ARRAY_ACCESS_INLINING)
-{
-	/***
-	 * Get imaginary data pointer for numeric array
-	 */
-	void* mxGetImagData(const(mxArray)* pa)
-	{
-		return pa.data.number_array.pimag_data;
-	}
-}
-else
-{
-	/**
-	 * Get imaginary data pointer for numeric array
-	 */
-	void* mxGetImagData
-	(
-		const(mxArray)* pa		// pointer to array
-	);
-}
+/**
+ * Get imaginary data pointer for numeric array
+ */
+void* mxGetImagData
+(
+	const(mxArray)* pa		// pointer to array
+);
 
 
 /**
@@ -487,23 +407,10 @@ bool mxIsInt64(const(mxArray)* pa);
 bool mxIsUint64(const(mxArray)* pa);
 
 
-version(ARRAY_ACCESS_INLINING)
-{
-	/**
-	 * Get number of dimensions in array
-	 */
-	mwSize mxGetNumberOfDimensions(const(mxArray)* pa)
-	{
-		return cast(mwSize)(pa.number_of_dims);
-	}
-}
-else
-{
-	/**
-	 * Get number of dimensions in array
-	 */
-	mwSize mxGetNumberOfDimensions(const(mxArray)* pa);
-}
+/**
+ * Get number of dimensions in array
+ */
+mwSize mxGetNumberOfDimensions(const(mxArray)* pa);
 
 
 /**
@@ -519,25 +426,12 @@ size_t mxGetNumberOfElements(
 	const(mxArray)* pa		// pointer to array
 	);
 
-version(ARRAY_ACCESS_INLINING)
-{
-	/**
-	 * Get real data pointer for numeric array
-	 */
-	double* mxGetPr(const(mxArray)* pa)
-	{
-		return cast(double*) mxGetData(pa);
-	}
-}
-else
-{
-	/**
-	 * Get real data pointer for numeric array
-	 */
-	double* mxGetPr(
-		const(mxArray)* pa		// pointer to array
-	);
-}
+/**
+ * Get real data pointer for numeric array
+ */
+double* mxGetPr(
+	const(mxArray)* pa		// pointer to array
+);
 
 /**
  * Set real data pointer for numeric array
@@ -548,25 +442,12 @@ void mxSetPr(
 	);
 
 
-version(ARRAY_ACCESS_INLINING)
-{
-	/**
-	 * Get imaginary data pointer for numeric array
-	 */
-	double* mxGetPi(const(mxArray)* pa)
-	{
-		return cast(double *)mxGetImagData(pa);
-	}
-}
-else
-{
-	/**
-	 * Get imaginary data pointer for numeric array
-	 */
-	double* mxGetPi(
-		const(mxArray)* pa		// pointer to array
-	);
-}
+/**
+ * Get imaginary data pointer for numeric array
+ */
+double* mxGetPi(
+	const(mxArray)* pa		// pointer to array
+);
 
 
 /**
@@ -577,25 +458,12 @@ void mxSetPi(
 	double*		pi	// imaginary data array pointer
 );
 
-/+ TODO: mxArray doesn't have a member get_chars()!
-version(ARRAY_ACCESS_INLINING)
-{
-	/**
-	 * Get string array data
-	 */
-	mxChar* mxGetChars(const(mxArray)* pa)
-	{
-		return pa.get_chars();
-	}
-}
-else
-+/
-	/**
-	 * Get string array data
-	 */
-	mxChar* mxGetChars(
-		const(mxArray)* pa		// pointer to array
-		);
+/**
+ * Get string array data
+ */
+mxChar* mxGetChars(
+	const(mxArray)* pa		// pointer to array
+	);
 
 
 /**
@@ -618,16 +486,10 @@ void mxSetUserBits(
 	int			value
 );
 
-/* TODO:
-#ifdef __WATCOMC__
-#ifndef __cplusplus
-#pragma aux mxGetScalar value [8087];
-#endif
-#endif
-*/
 
 /**
  * Get the real component of the specified array's first data element.
+ * TODO?: return value will be in the FPU register
  */
 double mxGetScalar(const(mxArray)* pa);
 
@@ -721,6 +583,7 @@ mwIndex mxCalcSingleSubscript(const(mxArray)* pa, mwSize nsubs, const(mwIndex)* 
 
 /**
  * Get number of structure fields in array
+ * Returns 0 if mxArray is non-struct.
  */
 int mxGetNumberOfFields(
 	const(mxArray)* pa		// pointer to array
@@ -786,7 +649,7 @@ void mxSetField(mxArray* pa, mwIndex i, const(char)* fieldname, mxArray* value);
  * If the given property name doesn't exist, isn't public, or the object isn't
  * the right type, then mxGetProperty returns NULL.
  */
-mxArray* mxGetProperty(const(mxArray)* pa, mwIndex i, const(char)* propname);
+mxArray* mxGetProperty(const(mxArray)* pa, const mwIndex i, const(char)* propname);
 
  
 /**
@@ -1120,123 +983,6 @@ EXTERN_C void mexPrintAssertion(const(char)* test,
 #  define mxAssertS(test, message) assert(test)
 #endif
 */
-
-/* $Revision: 1.14.4.3 $ */
-
-/*
- * Conflicts with 32-bit compatibility
- * Needs revisiting.  Is this layer still worthwhile?
- * XXX
- */
-
-/+
-#if 0
-
-/*
- * Conflicts with 32-bit compatibility
- * Needs revisiting.  Is this layer still worthwhile?
- * XXX
- */
-
-#ifdef ARGCHECK
-
-#include "mwdebug.h" // Prototype _d versions of API functions
-
-#define mxAddField(pa, fieldname)					   mxAddField_d(pa, fieldname, __FILE__, __LINE__)
-#define mxArrayToString(pa)				mxArrayToString_d(pa, __FILE__, __LINE__)
-#define mxCalcSingleSubscript(pa, nsubs, subs)		  mxCalcSingleSubscript_d(pa, nsubs, subs, __FILE__, __LINE__) 
-#define mxCalloc(nelems, size)						  mxCalloc_d(nelems, size, __FILE__, __LINE__)
-#define mxCreateCellArray(ndim, dims)					mxCreateCellArray_d(ndim, dims, __FILE__, __LINE__)
-#define mxCreateCellMatrix(m, n)						mxCreateCellMatrix_d(m, n, __FILE__, __LINE__)
-#define mxCreateCharArray(ndim, dims)				   mxCreateCharArray_d(ndim, dims, __FILE__, __LINE__)
-#define mxCreateCharMatrixFromStrings(m, strings)	   mxCreateCharMatrixFromStrings_d(m, strings, __FILE__, __LINE__)
-#define mxCreateDoubleMatrix(m, n, cplxflag)		mxCreateDoubleMatrix_d(m, n, cplxflag, __FILE__, __LINE__)
-#define mxCreateDoubleScalar(value)				mxCreateDoubleScalar_d(value, __FILE__, __LINE__)
-#define mxCreateLogicalArray(ndim, dims)		mxCreateLogicalArray_d(ndim, dims, __FILE__, __LINE__)
-#define mxCreateLogicalMatrix(m, n)				mxCreateLogicalMatrix_d(m, n, __FILE__, __LINE__)
-#define mxCreateLogicalScalar(value)					mxCreateLogicalScalar_d(value, __FILE__, __LINE__)
-#define mxCreateNumericArray(ndim, dims, classname, cplxflag) mxCreateNumericArray_d(ndim, dims, classname, cplxflag, __FILE__, __LINE__) 
-#define mxCreateNumericMatrix(m, n, classid, cmplx_flag)	  mxCreateNumericMatrix_d(m, n, classid, cmplx_flag, __FILE__, __LINE__)
-#define mxCreateSparse(m, n, nzmax, cplxflag)		   mxCreateSparse_d(m, n, nzmax, cplxflag, __FILE__, __LINE__) 
-#define mxCreateSparseLogicalMatrix(m, n, nzmax)	mxCreateSparseLogicalMatrix_d(m, n, nzmax, __FILE__, __LINE__)
-#define mxCreateString(string) mxCreateString_d(string, __FILE__, __LINE__)
-#define mxCreateStructArray(ndim, dims, nfields, fieldnames)  mxCreateStructArray_d(ndim, dims, nfields, fieldnames, __FILE__, __LINE__)
-#define mxCreateStructMatrix(m, n, nfields, fieldnames) mxCreateStructMatrix_d(m, n, nfields, fieldnames, __FILE__, __LINE__)
-#define mxDestroyArray(pa)				mxDestroyArray_d(pa, __FILE__, __LINE__)
-#define mxDuplicateArray(pa)					mxDuplicateArray_d(pa, __FILE__, __LINE__)
-#define mxFree(pm)					mxFree_d(pm, __FILE__, __LINE__)
-#define mxGetChars(pa)					mxGetChars_d(pa, __FILE__, __LINE__)
-#define mxGetCell(pa, index)					mxGetCell_d(pa, index, __FILE__, __LINE__)
-#define mxGetClassID(pa)				mxGetClassID_d(pa, __FILE__, __LINE__)
-#define mxGetClassName(pa)				mxGetClassName_d(pa, __FILE__, __LINE__)
-#define mxGetData(pa)								   mxGetData_d(pa, __FILE__, __LINE__)
-#define mxGetDimensions(pa)  					mxGetDimensions_d(pa, __FILE__, __LINE__)
-#define mxGetElementSize(pa)					mxGetElementSize_d(pa, __FILE__, __LINE__)
-#define mxGetProperty(pa, index, propname)			  mxGetProperty_d(pa, index, propname, __FILE__, __LINE__)
-#define mxGetField(pa, index, fieldname)				mxGetField_d(pa, index, fieldname, __FILE__, __LINE__)
-#define mxGetFieldByNumber(pa, index, fieldnum)		 mxGetFieldByNumber_d(pa, index, fieldnum, __FILE__, __LINE__)
-#define mxGetFieldNameByNumber(pa, fieldnum)			mxGetFieldNameByNumber_d(pa, fieldnum, __FILE__, __LINE__)
-#define mxGetFieldNumber(pa, fieldname)				 mxGetFieldNumber_d(pa, fieldname, __FILE__, __LINE__)
-#define mxGetImagData(pa)							   mxGetImagData_d(pa, __FILE__, __LINE__)
-#define mxGetIr(pa)									 mxGetIr_d(pa, __FILE__, __LINE__)
-#define mxGetJc(pa)									 mxGetJc_d(pa, __FILE__, __LINE__)
-#define mxGetLogicals(pa)				mxGetLogicals_d(pa, __FILE__, __LINE__)
-#define mxGetNumberOfDimensions(pa)				mxGetNumberOfDimensions_d(pa, __FILE__, __LINE__)
-#define mxGetNumberOfElements(pa)				mxGetNumberOfElements_d(pa, __FILE__, __LINE__)
-#define mxGetNumberOfFields(pa)					mxGetNumberOfFields_d(pa, __FILE__, __LINE__)
-#define mxGetNzmax(pa)					mxGetNzmax_d(pa, __FILE__, __LINE__)
-#define mxGetM(pa)					mxGetM_d(pa, __FILE__, __LINE__)
-#define mxGetN(pa)					mxGetN_d(pa, __FILE__, __LINE__)
-#define mxGetPi(pa)									 mxGetPi_d(pa, __FILE__, __LINE__)
-#define mxGetPr(pa)									 mxGetPr_d(pa, __FILE__, __LINE__)
-#define mxGetScalar(pa)					mxGetScalar_d(pa, __FILE__, __LINE__)
-#define mxGetString(pa, buffer, buflen)				 mxGetString_d(pa, buffer, buflen, __FILE__, __LINE__)
-#define mxIsCell(pa)					mxIsCell_d(pa, __FILE__, __LINE__)
-#define mxIsChar(pa)					mxIsChar_d(pa, __FILE__, __LINE__)
-#define mxIsClass(pa, classname)						mxIsClass_d(pa, classname, __FILE__, __LINE__)
-#define mxIsComplex(pa)					mxIsComplex_d(pa, __FILE__, __LINE__)
-#define mxIsDouble(pa)					mxIsDouble_d(pa, __FILE__, __LINE__)
-#define mxIsEmpty(pa)					mxIsEmpty_d(pa, __FILE__, __LINE__)
-#define mxIsFromGlobalWS(pa)							mxIsFromGlobalWS_d(pa, __FILE__, __LINE__)
-#define mxIsInt8(pa)					mxIsInt8_d(pa, __FILE__, __LINE__)
-#define mxIsInt16(pa)					mxIsInt16_d(pa, __FILE__, __LINE__)
-#define mxIsInt32(pa)					mxIsInt32_d(pa, __FILE__, __LINE__)
-#define mxIsLogical(pa)					mxIsLogical_d(pa, __FILE__, __LINE__)
-#define mxIsNumeric(pa)					mxIsNumeric_d(pa, __FILE__, __LINE__)
-#define mxIsOpaque(pa)					mxIsOpaque_d(pa, __FILE__, __LINE__)
-#define mxIsObject(pa)					mxIsObject_d(pa, __FILE__, __LINE__)
-#define mxIsSingle(pa)					mxIsSingle_d(pa, __FILE__, __LINE__)
-#define mxIsSparse(pa)					mxIsSparse_d(pa, __FILE__, __LINE__)
-#define mxIsStruct(pa)					mxIsStruct_d(pa, __FILE__, __LINE__)
-#define mxIsUint8(pa)					mxIsUint8_d(pa, __FILE__, __LINE__)
-#define mxIsUint16(pa)					mxIsUint16_d(pa, __FILE__, __LINE__)
-#define mxIsUint32(pa)					mxIsUint32_d(pa, __FILE__, __LINE__)
-#define mxIsUint64(pa)						mxIsUint64_d(pa, __FILE__, __LINE__)
-#define mxMalloc(n)							mxMalloc_d(n, __FILE__, __LINE__)
-#define mxRealloc(pm, nelems)					mxRealloc_d(pm, nelems, __FILE__, __LINE__)
-#define mxRemoveField(pa, field)				mxRemoveField_d(pa, field, __FILE__, __LINE__)
-#if !defined(MATLAB_MEX_FILE)
-#define mxSetAllocFcns(callocptr, freeptr, reallocptr, mallocptr) mxSetAllocFcns_d(callocptr, freeptr, reallocptr, freeptr, __FILE__, __LINE__)
-#endif // MATLAB_MEX_FILE
-#define mxSetCell(pa, index, value)				mxSetCell_d(pa, index, value, __FILE__, __LINE__)
-#define mxSetClassName(pa, name)				mxSetClassName_d(pa, name, __FILE__, __LINE__)
-#define mxSetData(pa, pd)				mxSetData_d(pa, pd, __FILE__, __LINE__)
-#define mxSetDimensions(pa, size, ndims)				mxSetDimensions_d(pa, size, ndims, __FILE__, __LINE__)
-#define mxSetProperty(pa, index, propname, value)	   mxSetProperty_d(pa, index, propname, value, __FILE__, __LINE__)
-#define mxSetField(pa, index, fieldname, value)		 mxSetField_d(pa, index, fieldname, value, __FILE__, __LINE__)
-#define mxSetFieldByNumber(pa, index, fieldnum, value)  mxSetFieldByNumber_d(pa, index, fieldnum, value, __FILE__, __LINE__)
-#define mxSetImagData(pa, pid)					mxSetImagData_d(pa, pid, __FILE__, __LINE__)
-#define mxSetIr(pa, ir)					mxSetIr_d(pa, ir, __FILE__, __LINE__)
-#define mxSetJc(pa, jc)					mxSetJc_d(pa, jc, __FILE__, __LINE__)
-#define mxSetM(pa, m)						mxSetM_d(pa, m, __FILE__, __LINE__)
-#define mxSetN(pa, n)						mxSetN_d(pa, n, __FILE__, __LINE__)
-#define mxSetNzmax(pa, nzmax)					mxSetNzmax_d(pa, nzmax, __FILE__, __LINE__)
-#define mxSetPi(pa, pi)					mxSetPi_d(pa, pi, __FILE__, __LINE__)
-#define mxSetPr(pa, pr)					mxSetPr_d(pa, pr, __FILE__, __LINE__)
-#endif
-
-#endif
- +/
 
 
 /*

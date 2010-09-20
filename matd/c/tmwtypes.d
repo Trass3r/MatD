@@ -301,7 +301,7 @@ static if ((byte.min + 1) != -byte.max)
  * Maximum length of a MATLAB identifier (function/variable/model)
  * including the null-termination character.
  */
-const TMW_NAME_LENGTH_MAX = 64;
+enum TMW_NAME_LENGTH_MAX = 64;
 
 /*
  * Maximum values for indices and dimensions

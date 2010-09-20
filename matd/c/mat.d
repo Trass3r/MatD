@@ -12,23 +12,9 @@ import core.stdc.stdio;
 public import matd.c.matrix;
 
 
-alias void MATFile; //! alias struct MATFile_tag MATFile;
+alias void MATFile; //! alias struct MatFile_tag MATFile;
 
 
-/* #ifdef MAT_ALLOW_OBSOLETE_API_CALLS */
-
-
-/**
- * Allocate and initialize a MATFile structure for a file "filename".
- * file "filename" must already have been fopened with a mode corresponding
- * to "mode" ("r" == "rb", "w" == "w+b", "u" == "r+b"), and the result
- * of that fopen must be passed in as "fp".
- *
- * WARNING:
- * THIS FILE IS FOR INTERNAL MATHWORKS USE ONLY.  IT IS AN UNDOCUMENTED
- * FUNCTION, AND MAY AT ANY TIME BE REMOVED FROM THE MAT API.
- */
-MATFile* matCreateMATFile(const(char)* filename, FILE* fp, const(char)* mode);
 
 
 /**
@@ -49,7 +35,7 @@ MATFile* matOpen(const(char)* filename, const(char)* mode);
 
 /**
  * Close a MAT-file opened with matOpen.
- *
+ * The pointer-to-MATfile argument is invalid, once matClose returns.
  * Return zero for success, EOF on error.
  */
 int  matClose(MATFile* pMF);
@@ -167,22 +153,3 @@ int  matDeleteVariable(MATFile* pMF, const(char)* name);
  * return value is NULL and num is set to a negative number.
  */
 const(char)** matGetDir(MATFile* pMF, int* num);
-
-version (ARGCHECK)
-{
-	import mwdebug; /* Prototype _d versions of API functions */
-/* TODO
-	#define matClose(pMAT) 				matClose_d(pMAT, __FILE__, __LINE__)
-	#define matDeleteVariable(pMAT, name)		matDeleteVariable_d(pMAT, name, __FILE__, __LINE__) 
-	#define matGetVariable(pMAT, name) 	matGetVariable_d(pMAT, name, __FILE__, __LINE__) 
-	#define matGetVariableInfo(pMAT, name) matGetVariableInfo_d(pMAT, name, __FILE__, __LINE__) 
-	#define matGetDir(pMAT, num) 			matGetDir_d(pMAT, num, __FILE__, __LINE__)
-	#define matGetFp(pMAT) 				matGetFp_d(pMAT, __FILE__, __LINE__) 
-	#define matGetNextVariable(pMAT, pname) matGetNextVariable_d(pMAT, pname, __FILE__, __LINE__)
-	#define matGetNextVariableInfo(pMAT, pname) 	matGetNextVariableInfo_d(pMAT, pname, __FILE__, __LINE__)
-	#define matOpen(fname, permissions) 	        matOpen_d(fname, permissions, __FILE__, __LINE__) 
-	#define matPutVariable(pMAT, name, pa) 	matPutVariable_d(pMAT, name, pa, __FILE__, __LINE__)
-	#define matPutVariableAsGlobal(pMAT, name, pa) matPutVariableAsGlobal_d(pMAT, name, pa, __FILE__, __LINE__)
-	#endif
-*/
-}

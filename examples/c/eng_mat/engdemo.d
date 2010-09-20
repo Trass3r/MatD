@@ -117,10 +117,9 @@ int main()
 	    engEvalString(ep, toStringz(str));
 
 	    /*
-	     * Echo the output from the command.  First two characters are
-	     * always the double prompt (>>).
+	     * Echo the output from the command.
 	     */
-	    writef("%s", &buffer[2]);
+	    writef("%s", buffer);
 
 	    /*
 	     * Get result of computation
