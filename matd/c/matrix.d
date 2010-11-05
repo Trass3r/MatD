@@ -8,6 +8,7 @@ module matd.c.matrix;
 pragma(lib, "libmx");
 
 public import matd.c.tmwtypes;
+import matd.c.util;
 
 extern(C):
 
@@ -187,6 +188,8 @@ enum mxClassID
 	mxSPARSE_CLASS = mxVOID_CLASS /* OBSOLETE! DO NOT USE */
 }
 
+mixin(bringToCurrentScope!mxClassID);
+
 /**
  * Indicates whether floating-point mxArrays are real or complex.
  */
@@ -195,6 +198,7 @@ enum mxComplexity : int
 	mxREAL,
 	mxCOMPLEX,
 }
+mixin(bringToCurrentScope!mxComplexity);
 
 /**
  * Published incomplete definition of mxArray

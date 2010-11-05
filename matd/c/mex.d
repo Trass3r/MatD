@@ -13,7 +13,7 @@ extern(C):
 
 alias void MEX_impl_info; // alias struct impl_info_tag* MEX_impl_info;
 
-alias void function() mex_exit_fn;
+alias extern(C) void function() mex_exit_fn; //!
 
 struct mexGlobalTableEntry
 {
