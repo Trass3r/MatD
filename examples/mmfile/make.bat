@@ -1,4 +1,1 @@
-@del /Q .objs
-@del .deps
-xfbuild +v +xstd dllmain.d dlldef.def main.d +ommfile.mexw32 -I../.. -debug -gc -unittest
-@rem xfbuild +v +xcore +xstd dllmain.d dlldef.def main.d +ommfile.mexw32 -I../.. -release -O -inline
+rdmd --build-only --chatty -I../.. -debug -g -unittest dllmain.d dlldef.def -ofmmfile.mexw32 main.d

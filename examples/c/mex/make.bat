@@ -1,16 +1,4 @@
-@del /Q .objs
-@del .deps
-@rem xfbuild +v +xstd dllmain.d dlldef.def arrayProduct.d +oarrayProduct.mexw32 -I..\.. -debug -g -unittest
-xfbuild +v +xcore +xstd dllmain.d dlldef.def arrayProduct.d +oarrayProduct.mexw32 -I..\..\.. -release -O -inline
-
-
-@del /Q .objs
-@del .deps
-xfbuild +v +xcore +xstd dllmain.d dlldef.def arrayProductFOR.d +oarrayProductFOR.mexw32 -I..\..\.. -release -O -inline
-
-@del /Q .objs
-@del .deps
-xfbuild +v +xcore +xstd dllmain.d dlldef.def explore.d +oexplore.mexw32 -I..\..\.. -release -O -inline
-
-
+rdmd --build-only --chatty -I..\..\.. -release -O -inline dllmain.d dlldef.def -ofarrayProduct.mexw32 arrayProduct.d
+rdmd --build-only --chatty -I..\..\.. -release -O -inline dllmain.d dlldef.def -ofarrayProductFOR.mexw32 arrayProductFOR.d
+rdmd --build-only --chatty -I..\..\.. -release -O -inline dllmain.d dlldef.def -ofexplore.mexw32 explore.d
 pause
