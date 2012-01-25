@@ -1,0 +1,15 @@
+== Welcome ==
+
+**MatD ** is a set of bindings to access Matlab's external interface from the [[http://www.digitalmars.com/d|D programming language]].
+
+Some examples are included.
+
+
+== License ==
+
+The code is licensed under the terms of the Boost Software License 1.0.
+
+
+== Build instructions ==
+
+* Some make scripts are included. Not thoroughly tested though.
