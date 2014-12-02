@@ -5,7 +5,7 @@
  */
 module matd.c.matrix;
 
-pragma(lib, "libmx");
+//pragma(lib, "libmx");
 
 public import matd.c.tmwtypes;
 import matd.c.util;
@@ -138,7 +138,7 @@ alias TMW_NAME_LENGTH_MAX mxMAXNAM;
 /**
  * Logical type
  */
-typedef bool mxLogical;
+alias bool mxLogical;
 
 /**
  * UTF-16 character type
@@ -203,8 +203,53 @@ mixin(bringToCurrentScope!mxComplexity);
 /**
  * Published incomplete definition of mxArray
  */
-typedef void mxArray; // alias struct mxArray_tag mxArray;
+//alias void mxArray;
 
+struct mxArray
+{
+	import std.bitmanip;
+
+	void*  reserved;
+	int[2] reserved1;
+	void*  reserved2;
+	size_t number_of_dims;
+	uint   reserved3;
+
+	struct Flags
+	{
+		mixin(bitfields!(
+			bool, "flag0", 1,
+			bool, "flag1", 1, 
+			bool, "flag2", 1,
+			bool, "flag3", 1,
+			bool, "flag4", 1,
+			bool, "flag5", 1,
+			bool, "flag6", 1,
+			bool, "flag7", 1,
+			bool, "flag7a", 1,
+			bool, "flag8", 1,
+			bool, "flag9", 1,
+			bool, "flag10", 1,
+			ubyte, "flag11", 4,
+			ubyte, "flag12", 8,
+			ubyte, "flag13", 8
+		));
+	}
+	Flags flags;
+	size_t[2] reserved4;
+	union Data
+	{
+		struct NumberArray
+		{
+			void* pdata;
+			void* pimag_data;
+			void* reserved5;
+			size_t[3] reserved6;
+		}
+		NumberArray number_array;
+	}
+	Data data;
+}
 
 /**
  * allocate memory, notifying registered listener

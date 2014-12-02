@@ -5,7 +5,7 @@
  */
 module matd.c.mex;
 
-pragma(lib, "libmex");
+//pragma(lib, "libmex");
 version = MATLAB_MEX_FILE;
 public import matd.c.matrix;
 
